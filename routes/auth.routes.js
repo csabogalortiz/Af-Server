@@ -107,6 +107,7 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/verify', isAuthenticated, (req, res) => {
+    console.log('Si funciona', req.payload)
     res.status(200).json(req.payload)
 })
 
