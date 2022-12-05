@@ -7,7 +7,7 @@ const { isAuthenticated } = require('./../midleware/jwt.middleware')
 // const { isLoggedOut } = require('./../middleware/route-guard');
 
 // User Sign Up 
-router.post('/sign-up', (req, res, next) => {
+router.post('/signup', (req, res, next) => {
 
     console.log(req.body)
     console.log(req.params)
@@ -57,7 +57,7 @@ router.post('/sign-up', (req, res, next) => {
         })
 })
 
-router.post('/log-in', (req, res, next) => {
+router.post('/login', (req, res, next) => {
 
     const { email, password } = req.body;
 

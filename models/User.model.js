@@ -29,12 +29,6 @@ const userSchema = new Schema({
     default: 'USER'
   },
 
-  createdPosts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Post',
-    }
-  ],
   favPosts: [
     {
       type: Schema.Types.ObjectId,

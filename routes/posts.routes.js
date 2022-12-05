@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 
 
 // Get One Post
-router.get("/getOnePost/:post_id", (req, res, next) => {
+router.get("/:post_id", (req, res, next) => {
 
     const { post_id } = req.params
 
@@ -28,11 +28,11 @@ router.get("/getOnePost/:post_id", (req, res, next) => {
 // Create Post
 
 router.post('/create', (req, res, next) => {
-    const { title, content, owner } = req.body
+    const { title, content } = req.body
     // const { _id: owner } = req.session.currentpost
 
     Post
-        .create({ title, content, owner })
+        .create({ title, content })
         .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
 

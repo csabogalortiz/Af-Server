@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 
 // Get one User
 
-router.get("/getOneUser/:user_id", (req, res, next) => {
+router.get("/:user_id", (req, res, next) => {
 
     const { user_id } = req.params
 

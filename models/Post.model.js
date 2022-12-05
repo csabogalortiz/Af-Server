@@ -16,13 +16,13 @@ const postSchema = new Schema({
 
     },
 
-    comment: [{
+    comments: [{
         type: Schema.Types.ObjectId,
         ref: 'Comment'
     }],
 
 
-    feeling: [{
+    feelings: [{
         type: Schema.Types.ObjectId,
         ref: 'Feeling'
     }],
@@ -52,10 +52,10 @@ const postSchema = new Schema({
         type: String,
     },
 
-    artForm: {
+    mediaType: {
 
         type: String,
-        enum: ['PIC', "CANVAS", "SONG", "Text"],
+        enum: ['PIC', "CANVAS", "SONG", "TEXT"],
     }
 
 },
