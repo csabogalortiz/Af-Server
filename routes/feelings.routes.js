@@ -42,9 +42,9 @@ router.post('/create', (req, res, next) => {
 // Edit Feeling
 
 router.put("/:feeling_id/edit", (req, res) => {
-    const { id } = req.params
+    const { feeling_id } = req.params
     Feeling
-        .findByIdAndUpdate(id, req.body, { new: true })
+        .findByIdAndUpdate(feeling_id, req.body, { new: true })
         .then(resp => res.json(resp))
         .catch(err => console.log(err))
 })
@@ -52,9 +52,9 @@ router.put("/:feeling_id/edit", (req, res) => {
 // Delete Feeling
 
 router.delete("/:feeling_id/delete", (req, res) => {
-    const { id } = req.params
+    const { feeling_id } = req.params
     User
-        .findByIdAndDelete(id)
+        .findByIdAndDelete(feeling_id)
         .then(() => res.json(`deleted user with id ${id}`))
         .catch(err => console.log(err))
 })

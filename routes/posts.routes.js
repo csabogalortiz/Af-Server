@@ -29,14 +29,17 @@ router.get("/:post_id", (req, res, next) => {
 
 router.post('/create', (req, res, next) => {
     const { title, content } = req.body
+    let prueba
+    let user
     // const { _id: owner } = req.session.currentpost
 
     Post
         .create({ title, content })
-        .then(response => res.json(response))
-        .catch(err => res.status(500).json(err))
+        .then(response => prueba = response)
 
-    User
+
+    return User
+        //   let whole: {prueba, user}
         .findByIdAndUpdate(user_id, { "$push": { "comments": comment._id } })
         .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
