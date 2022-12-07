@@ -6,19 +6,18 @@ const User = require('../models/User.model')
 const { isAuthenticated } = require("../midleware/jwt.middleware")
 
 
-
-
 // Get All Posts
 router.get('/', (req, res) => {
     Post
         .find()
+        .populate('owner')
         .then(response => setTimeout(() => res.json(response), 1000))
         .catch(err => res.status(500).json(err))
 });
 
 
 // Get One Post
-router.get("/:post_id", (req, res, next) => {
+router.get("/details/:post_id", (req, res, next) => {
 
     const { post_id } = req.params
 
@@ -28,20 +27,22 @@ router.get("/:post_id", (req, res, next) => {
         .catch(err => next(err))
 })
 
+
 // Create Post
 
 router.post('/create', isAuthenticated, (req, res, next) => {
-    const { title, content } = req.body
-    let prueba
-    let user
 
+    console.log('dddddddddd', req.payload_id)
 
     Post
-        .create({ ...req.body, owner: req.payload_id })
+        .create({ ...req.body, owner: req.payload })
         .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
 
 
+    // const { title, content } = req.body
+    // let prueba
+    // let user
     // return User
     //     //   let whole: {prueba, user}
     //     .findByIdAndUpdate(user_id, { "$push": { "comments": comment._id } })
@@ -53,8 +54,6 @@ router.post('/create', isAuthenticated, (req, res, next) => {
 // Created Posts list
 
 router.get('/createdPosts', (req, res) => {
-
-    const { _id: owner } = req.session.currentUser
 
     Post
         .find({ owner })
