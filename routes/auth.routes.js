@@ -8,11 +8,6 @@ const { isAuthenticated } = require('./../midleware/jwt.middleware')
 
 // User Sign Up 
 router.post('/signup', (req, res, next) => {
-
-    console.log(req.body)
-    console.log(req.params)
-    console.log(req.query)
-
     const { email, password, username, profileImg } = req.body
 
 
