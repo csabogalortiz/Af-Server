@@ -13,7 +13,7 @@ router.post('/signup', (req, res, next) => {
     console.log(req.params)
     console.log(req.query)
 
-    const { email, password, username } = req.body
+    const { email, password, username, profileImg } = req.body
 
 
     if (password === undefined) {
@@ -45,7 +45,7 @@ router.post('/signup', (req, res, next) => {
             const salt = bcryptjs.genSaltSync(saltRounds)
             const hashedPassword = bcryptjs.hashSync(password, salt)
 
-            return User.create({ email, password: hashedPassword, username })
+            return User.create({ email, password: hashedPassword, username, profileImg })
         })
 
         .then((createdUser) => {
