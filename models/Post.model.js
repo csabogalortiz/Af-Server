@@ -53,7 +53,6 @@ const postSchema = new Schema({
     },
 
     mediaType: {
-
         type: String,
         enum: ['PIC', "CANVAS", "SONG", "TEXT"],
     }
