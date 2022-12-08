@@ -16,7 +16,6 @@ const userSchema = new Schema({
   },
   profileImg: {
     type: String,
-    default: 'https://i.pinimg.com/736x/3d/cd/4a/3dcd4af5bc9e06d36305984730ab7888.jpg'
   },
 
   bio: {

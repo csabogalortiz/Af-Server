@@ -38,16 +38,6 @@ router.post('/create', isAuthenticated, (req, res, next) => {
         .create({ ...req.body, owner: req.payload })
         .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
-
-
-    // const { title, content } = req.body
-    // let prueba
-    // let user
-    // return User
-    //     //   let whole: {prueba, user}
-    //     .findByIdAndUpdate(user_id, { "$push": { "comments": comment._id } })
-    //     .then(response => res.json(response))
-    //     .catch(err => res.status(500).json(err))
 })
 
 

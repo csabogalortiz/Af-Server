@@ -17,12 +17,12 @@ router.post('/signup', (req, res, next) => {
 
 
     if (password === undefined) {
-        res.status(400).json({ message: 'Password not fund' })
+        res.status(400).json({ message: 'Invalid Password' })
         return
     }
 
     if (email === undefined) {
-        res.status(400).json({ message: 'Email not fund' })
+        res.status(400).json({ message: 'Email not found' })
         return
     }
 
@@ -107,7 +107,7 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/verify', isAuthenticated, (req, res) => {
-    console.log('Si funciona', req.payload)
+    console.log('Check', req.payload)
     res.status(200).json(req.payload)
 })
 
