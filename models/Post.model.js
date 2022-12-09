@@ -48,7 +48,7 @@ const postSchema = new Schema({
         type: String,
     },
 
-    url: {
+    videoId: {
         type: String,
     },
 
