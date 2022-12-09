@@ -32,7 +32,6 @@ router.get("/details/:post_id", (req, res, next) => {
 
 router.post('/create', isAuthenticated, (req, res, next) => {
 
-    console.log('dddddddddd', req.payload_id)
 
     Post
         .create({ ...req.body, owner: req.payload })

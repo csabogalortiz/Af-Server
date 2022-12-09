@@ -2,37 +2,27 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post.model')
 const Comment = require('../models/Comment.model')
-// const { isLoggedIn } = require('./../middleware/route-guard');
-// const User = require('../models/User.model')
+const { isAuthenticated } = require("../midleware/jwt.middleware")
 
 
-// Get One Comment 
 
-router.get("/getOneComment/:comment_id", (req, res, next) => {
+// Get Comments
 
-  const { comment_id } = req.params
-
+router.get('/', (req, res) => {
   Comment
-    .findById(comment_id)
-    .then(response => res.json(response))
+    .find()
+    .populate('owner')
+    .then(response => setTimeout(() => res.json(response), 1000))
     .catch(err => res.status(500).json(err))
-})
+});
 
 
 // Create Comment
 
-router.post('/comment/create/:post_id', (req, res, next) => {
-  const { owner, description } = req.body
-  const { post_id } = req.params
-  // const { _id: owner } = req.session.currentUser
+router.post('/create', isAuthenticated, (req, res, next) => {
 
   Comment
-    .create({ owner, description })
-    .then(response => res.json(response))
-    .catch(err => res.status(500).json(err))
-
-  Post
-    .findByIdAndUpdate(post_id, { "$push": { "comment": comment._id } })
+    .create({ ...req.body, owner: req.payload })
     .then(response => res.json(response))
     .catch(err => res.status(500).json(err))
 })
