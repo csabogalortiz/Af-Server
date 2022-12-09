@@ -19,15 +19,24 @@ router.get('/', (req, res) => {
 
 // Create Comment
 
-router.post('/create', isAuthenticated, (req, res, next) => {
-
+router.post('/create/:post_id', isAuthenticated, (req, res, next) => {
+  console.log('sacando el Id', req.params.post_id)
+  const post_id = req.params.post_id
   Comment
     .create({ ...req.body, owner: req.payload })
-    .then(response => res.json(response))
+    .then(response => {
+
+      console.log('esto es response', response)
+      console.log({ post_id })
+      Post
+        .findByIdAndUpdate(post_id, { "$push": { "comments": response._id } })
+        .then(() => res.json(response))
+        .catch(err => console.log(err))
+
+
+    })
     .catch(err => res.status(500).json(err))
 })
-
-
 
 // Delete Comment
 
