@@ -18,13 +18,14 @@ router.get('/', (req, res) => {
 // Create Comment
 
 router.post('/create/:post_id', isAuthenticated, (req, res, next) => {
-  console.log('sacando el Id', req.params.post_id)
   const post_id = req.params.post_id
+
+
   Comment
     .create({ ...req.body, owner: req.payload })
     .then(response => {
 
-      console.log('esto es response', response)
+      console.log(response)
       console.log({ post_id })
       Post
         .findByIdAndUpdate(post_id, { "$push": { "comments": response._id } })

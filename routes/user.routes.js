@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const User = require('../models/User.model')
+const jwt = require('jsonwebtoken')
+const { isAuthenticated } = require('./../midleware/jwt.middleware')
 
 
 // Get All Users
@@ -17,7 +19,7 @@ router.get("/", (req, res) => {
 
 router.get("/:user_id", (req, res, next) => {
 
-    const { user_id } = req.params
+    const user_id = req.params.user_id
 
     User
         .findById(user_id)
@@ -25,6 +27,25 @@ router.get("/:user_id", (req, res, next) => {
         .catch(err => next(err))
 })
 
+
+// Followers 
+
+router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
+
+    const friend_id = req.params.user_id
+
+
+    const currentuser_id = req.payload
+
+    console.log({ friend_id })
+    console.log({ currentuser_id })
+
+    User
+        .findByIdAndUpdate(currentuser_id, { "$push": { "followers": friend_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+
+})
 
 // Edit User
 
