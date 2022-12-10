@@ -16,6 +16,7 @@ const userSchema = new Schema({
   },
   profileImg: {
     type: String,
+    default: 'https://ps.w.org/metronet-profile-picture/assets/icon-256x256.png?rev=2464419'
   },
 
   bio: {

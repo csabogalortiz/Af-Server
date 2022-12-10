@@ -4,8 +4,6 @@ const Post = require('../models/Post.model')
 const Comment = require('../models/Comment.model')
 const { isAuthenticated } = require("../midleware/jwt.middleware")
 
-
-
 // Get Comments
 
 router.get('/', (req, res) => {

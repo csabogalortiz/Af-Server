@@ -4,6 +4,7 @@ const { findByIdAndUpdate, findByIdAndDelete } = require("../models/Post.model")
 const Post = require('../models/Post.model')
 const User = require('../models/User.model')
 const { isAuthenticated } = require("../midleware/jwt.middleware")
+const Comment = require('../models/Comment.model')
 
 
 // Get All Posts
@@ -23,6 +24,15 @@ router.get("/details/:post_id", (req, res, next) => {
 
     Post
         .findById(post_id)
+
+        .populate({
+            path: 'comments',
+            model: "Comment",
+            populate: {
+                path: 'owner',
+                model: "User"
+            },
+        })
         .then(response => res.json(response))
         .catch(err => next(err))
 })
