@@ -10,7 +10,6 @@ router.get("/", (req, res) => {
 
     User
         .find()
-        // .select({ title: 1, imageUrl: 1 })
         .then(response => setTimeout(() => res.json(response), 1000))
         .catch(err => res.status(500).json(err))
 })
@@ -23,18 +22,15 @@ router.get("/:user_id", (req, res, next) => {
 
     User
         .findById(user_id)
+        .populate('followers')
         .then(response => res.json(response))
         .catch(err => next(err))
 })
 
 
 // Followers 
-
 router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
-
     const friend_id = req.params.user_id
-
-
     const currentuser_id = req.payload
 
     console.log({ friend_id })
