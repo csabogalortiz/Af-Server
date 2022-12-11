@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
 
 // Get One Feeling
 
-router.get("/:feeling_id", (req, res, next) => {
+router.get("/details/:feeling_id", (req, res, next) => {
     const { feeling_id } = req.params
 
     Feeling
