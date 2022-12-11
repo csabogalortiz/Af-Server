@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const User = require('../models/User.model')
 const jwt = require('jsonwebtoken')
-const { isAuthenticated } = require('./../midleware/jwt.middleware')
+const { isAuthenticated } = require('./../midleware/jwt.middleware');
+const { model } = require("mongoose");
 
 
 // Get All Users
@@ -23,7 +24,15 @@ router.get("/:user_id", (req, res, next) => {
     User
         .findById(user_id)
         .populate('followers')
-        .populate('favPosts')
+        .populate({
+            path: 'favPosts',
+            model: 'Post',
+            populate: {
+                path: 'owner',
+                model: 'User'
+            },
+        })
+        // .populate('favPosts')
 
         .then(response => res.json(response))
         .catch(err => next(err))
@@ -39,7 +48,7 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
     console.log({ currentuser_id })
 
     User
-        .findByIdAndUpdate(currentuser_id, { "$push": { "followers": friend_id } })
+        .findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } })
         .then(response => res.json(response))
         .catch(err => next(err))
 
@@ -54,7 +63,7 @@ router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
     console.log({ user_id })
 
     User
-        .findByIdAndUpdate(user_id, { "$push": { "favPosts": post_id } })
+        .findByIdAndUpdate(user_id, { "$addToSet": { "favPosts": post_id } })
         .then(response => res.json(response))
         .catch(err => next(err))
 })
