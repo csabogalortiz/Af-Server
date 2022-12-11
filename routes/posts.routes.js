@@ -52,10 +52,13 @@ router.post('/create', isAuthenticated, (req, res, next) => {
 
 // Created Posts list
 
-router.get('/createdPosts', (req, res) => {
+router.get('/createdPosts/:user_id', isAuthenticated, (req, res) => {
+
+    const user_id = req.params.user_id
 
     Post
-        .find({ owner })
+        .find({ owner: user_id })
+        .populate('owner')
         .then(response => res.json(response))
         .catch(error => { next(error) })
 })

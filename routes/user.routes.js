@@ -68,6 +68,34 @@ router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
         .catch(err => next(err))
 })
 
+// unlike Post
+
+router.post("/unlikePost/:post_id", isAuthenticated, (req, res, next) => {
+    const post_id = req.params.post_id
+    user_id = req.payload
+
+    console.log({ user_id })
+
+    User
+        .findByIdAndUpdate(user_id, { "$pull": { "favPosts": post_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+})
+
+
+// MyPosts
+router.post("/myPosts/:post_id", isAuthenticated, (req, res, next) => {
+    const post_id = req.params.post_id
+    user_id = req.payload
+
+    console.log({ user_id })
+
+    User
+        .findByIdAndUpdate(user_id, { "$addToSet": { "myPosts": post_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+})
+
 
 // Edit User
 

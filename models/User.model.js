@@ -36,6 +36,14 @@ const userSchema = new Schema({
     }
   ],
 
+
+  myPosts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    }
+  ],
+
   reTweetedPosts: [
     {
       type: Schema.Types.ObjectId,
