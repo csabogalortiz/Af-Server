@@ -23,6 +23,8 @@ router.get("/:user_id", (req, res, next) => {
     User
         .findById(user_id)
         .populate('followers')
+        .populate('favPosts')
+
         .then(response => res.json(response))
         .catch(err => next(err))
 })
@@ -42,6 +44,21 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
         .catch(err => next(err))
 
 })
+
+
+// FavPost
+router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
+    const post_id = req.params.post_id
+    user_id = req.payload
+
+    console.log({ user_id })
+
+    User
+        .findByIdAndUpdate(user_id, { "$push": { "favPosts": post_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+})
+
 
 // Edit User
 
