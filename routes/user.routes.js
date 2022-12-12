@@ -42,15 +42,23 @@ router.get("/:user_id", (req, res, next) => {
 // Followers 
 router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
     const friend_id = req.params.user_id
-    const currentuser_id = req.payload
+    const currentuser_id = req.payload._id
 
     console.log({ friend_id })
     console.log({ currentuser_id })
 
-    User
-        .findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } })
-        .then(response => res.json(response))
+    const promises = [User.findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } }, { new: true }), User.findByIdAndUpdate(friend_id, { "$addToSet": { "followers": currentuser_id } }, { new: true })]
+
+    Promise
+        .all(promises)
+        .then(([currentuser, friend]) => res.json([currentuser, friend]))
         .catch(err => next(err))
+
+    // User
+    //     .findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } })
+
+    //     .then(response => res.json(response))
+    //     .catch(err => next(err))
 
 })
 
@@ -59,15 +67,18 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
 
 router.post("/unfollow/:user_id", isAuthenticated, (req, res, next) => {
     const friend_id = req.params.user_id
-    const currentuser_id = req.payload
+    const currentuser_id = req.payload._id
 
     console.log({ friend_id })
     console.log({ currentuser_id })
 
-    User
-        .findByIdAndUpdate(currentuser_id, { "$pull": { "followers": friend_id } })
-        .then(response => res.json(response))
+    const promises = [User.findByIdAndUpdate(currentuser_id, { "$pull": { "followers": friend_id } }, { new: true }), User.findByIdAndUpdate(friend_id, { "$pull": { "followers": currentuser_id } }, { new: true })]
+
+    Promise
+        .all(promises)
+        .then(([currentuser, friend]) => res.json([currentuser, friend]))
         .catch(err => next(err))
+
 
 })
 
