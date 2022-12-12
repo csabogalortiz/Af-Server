@@ -8,7 +8,6 @@ router.get("/", (req, res) => {
 
     Feeling
         .find()
-        // .select({ title: 1, imageUrl: 1 })
         .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
 })
@@ -22,7 +21,8 @@ router.get("/random", (req, res) => {
 
     Feeling
         .find()
-        .then(allfeelings => {res.json(allfeelings[Math.floor(Math.random()*allfeelings.length)])
+        .then(allfeelings => {
+            res.json(allfeelings[Math.floor(Math.random() * allfeelings.length)])
         })
         .catch(err => res.status(500).json(err))
 })
