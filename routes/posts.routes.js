@@ -11,6 +11,9 @@ const Comment = require('../models/Comment.model')
 router.get('/', (req, res) => {
     Post
         .find()
+        // .sort({ createdAt: 1 })
+       
+    //    .select({ createdAt: 1,title: 1, content: 1, owner: 1, postImg: 1, canvas:1 , videoId: 1  })
         .populate('owner')
         .then(response => setTimeout(() => res.json(response), 1000))
         .catch(err => res.status(500).json(err))

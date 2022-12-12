@@ -9,9 +9,25 @@ router.get("/", (req, res) => {
     Feeling
         .find()
         // .select({ title: 1, imageUrl: 1 })
-        .then(response => setTimeout(() => res.json(response), 1000))
+        .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
 })
+
+
+
+// Get Random Feeling 
+
+router.get("/random", (req, res) => {
+
+
+    Feeling
+        .find()
+        .then(allfeelings => {res.json(allfeelings[Math.floor(Math.random()*allfeelings.length)])
+        })
+        .catch(err => res.status(500).json(err))
+})
+
+
 
 
 // Get One Feeling
