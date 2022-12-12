@@ -22,10 +22,10 @@ const postSchema = new Schema({
     }],
 
 
-    feelings: [{
+    feeling: {
         type: Schema.Types.ObjectId,
         ref: 'Feeling'
-    }],
+    },
 
 
     favorite_count: {

@@ -12,10 +12,10 @@ router.get('/', (req, res) => {
     Post
 
         .find()
-        .sort ({createdAt: -1})
+        .sort({ createdAt: -1 })
         .populate('owner')
         .then(response => {
-            console.log('estas ordensadoo???',response)
+            console.log('estas ordensadoo???', response)
             res.json(response)
         })
         .catch(err => res.status(500).json(err))
@@ -50,7 +50,7 @@ router.get("/details/:post_id", (req, res, next) => {
 
 router.post('/create', isAuthenticated, (req, res, next) => {
 
-
+    console.log('hola req body', req.body)
     Post
         .create({ ...req.body, owner: req.payload })
         .then(response => res.json(response))
@@ -71,6 +71,20 @@ router.get('/createdPosts/:user_id', isAuthenticated, (req, res) => {
         .catch(error => { next(error) })
 })
 
+// All Posts from a Feeling 
+
+router.get('/ofFeeling/:feeling_id/', isAuthenticated, (req, res, next) => {
+
+    const feeling_id = req.params.feeling_id
+    console.log(feeling_id)
+
+    Post
+        .find({ feelings: feeling_id })
+        .populate('feeling')
+        .then(response => res.json(response))
+        .catch(error => { next(error) })
+
+})
 
 // Delete Post
 

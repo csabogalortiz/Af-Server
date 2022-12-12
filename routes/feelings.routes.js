@@ -32,7 +32,7 @@ router.get("/random", (req, res) => {
 
 // Get One Feeling
 
-router.get("/details/:feeling_id", (req, res, next) => {
+router.get("/:feeling_id", (req, res, next) => {
     const { feeling_id } = req.params
 
     Feeling
