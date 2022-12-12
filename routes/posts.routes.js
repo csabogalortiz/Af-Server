@@ -72,5 +72,20 @@ router.get('/createdPosts/:user_id', isAuthenticated, (req, res) => {
 })
 
 
+// Delete Post
+
+router.delete('/delete/:post_id', isAuthenticated, (req, res) => {
+
+    const { post_id } = req.params
+    const { user_id: user_id } = req.payload
+
+    Post
+        .findByIdAndDelete(post_id)
+        .then((response) => res.json(response))
+        .catch(error => { next(error) })
+
+})
+
+
 
 module.exports = router;
