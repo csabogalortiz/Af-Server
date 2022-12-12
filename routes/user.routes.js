@@ -55,6 +55,23 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
 })
 
 
+// UnFollow
+
+router.post("/unfollow/:user_id", isAuthenticated, (req, res, next) => {
+    const friend_id = req.params.user_id
+    const currentuser_id = req.payload
+
+    console.log({ friend_id })
+    console.log({ currentuser_id })
+
+    User
+        .findByIdAndUpdate(currentuser_id, { "$pull": { "followers": friend_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+
+})
+
+
 // FavPost
 router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
     const post_id = req.params.post_id
