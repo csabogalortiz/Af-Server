@@ -44,7 +44,7 @@ const userSchema = new Schema({
     }
   ],
 
-  reTweetedPosts: [
+  sharedPosts: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Post',

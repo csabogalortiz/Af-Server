@@ -44,21 +44,12 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
     const friend_id = req.params.user_id
     const currentuser_id = req.payload._id
 
-    console.log({ friend_id })
-    console.log({ currentuser_id })
-
     const promises = [User.findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } }, { new: true }), User.findByIdAndUpdate(friend_id, { "$addToSet": { "followers": currentuser_id } }, { new: true })]
 
     Promise
         .all(promises)
         .then(([currentuser, friend]) => res.json([currentuser, friend]))
         .catch(err => next(err))
-
-    // User
-    //     .findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } })
-
-    //     .then(response => res.json(response))
-    //     .catch(err => next(err))
 
 })
 
@@ -109,6 +100,39 @@ router.post("/unlikePost/:post_id", isAuthenticated, (req, res, next) => {
         .then(response => res.json(response))
         .catch(err => next(err))
 })
+
+
+// Share
+router.post("/sharePost/:post_id", isAuthenticated, (req, res, next) => {
+    const post_id = req.params.post_id
+    user_id = req.payload
+
+    console.log({ user_id })
+
+    User
+        .findByIdAndUpdate(user_id, { "$addToSet": { "sharedPosts": post_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+})
+
+// UnShare
+router.post("/unSharePost/:post_id", isAuthenticated, (req, res, next) => {
+    const post_id = req.params.post_id
+    user_id = req.payload
+
+    console.log({ user_id })
+
+    User
+        .findByIdAndUpdate(user_id, { "$pull": { "sharedPosts": post_id } })
+        .then(response => res.json(response))
+        .catch(err => next(err))
+})
+
+
+
+
+
+
 
 
 // MyPosts

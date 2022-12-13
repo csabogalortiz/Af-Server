@@ -7,7 +7,10 @@ const Feeling = require('../models/Feeling.model');
 router.get("/", (req, res) => {
 
     Feeling
+
+        // // .select({ title: 1, content: 1, post: 1 })
         .find()
+        .sort({ title: 1 })
         .then(response => res.json(response))
         .catch(err => res.status(500).json(err))
 })
