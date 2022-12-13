@@ -23,8 +23,6 @@ router.get('/', (req, res) => {
 
 
 
-
-
 // Get One Post
 router.get("/details/:post_id", (req, res, next) => {
 
@@ -73,13 +71,14 @@ router.get('/createdPosts/:user_id', isAuthenticated, (req, res) => {
 
 // All Posts from a Feeling 
 
-router.get('/ofFeeling/:feeling_id/', isAuthenticated, (req, res, next) => {
+router.get('/ofFeeling/:feeling_id', isAuthenticated, (req, res, next) => {
 
     const feeling_id = req.params.feeling_id
-    console.log(feeling_id)
+
+    console.log({ feeling_id })
 
     Post
-        .find({ feelings: feeling_id })
+        .find({ feeling: feeling_id })
         .populate('feeling')
         .then(response => res.json(response))
         .catch(error => { next(error) })
