@@ -4,7 +4,6 @@ const Post = require('../models/Post.model')
 const Comment = require('../models/Comment.model')
 const { isAuthenticated } = require("../midleware/jwt.middleware")
 
-// Get Comments
 
 router.get('/', (req, res) => {
   Comment
@@ -14,9 +13,6 @@ router.get('/', (req, res) => {
     .catch(err => res.status(500).json(err))
 });
 
-
-// Create Comment
-
 router.post('/create/:post_id', isAuthenticated, (req, res, next) => {
   const post_id = req.params.post_id
 
@@ -25,19 +21,14 @@ router.post('/create/:post_id', isAuthenticated, (req, res, next) => {
     .create({ ...req.body, owner: req.payload })
     .then(response => {
 
-      console.log(response)
-      console.log({ post_id })
       Post
         .findByIdAndUpdate(post_id, { "$push": { "comments": response._id } })
         .then(() => res.json(response))
         .catch(err => console.log(err))
-
-
     })
     .catch(err => res.status(500).json(err))
 })
 
-// Delete Comment
 
 router.delete(`/delete/:comment_id`, (req, res) => {
   const { id: comment_id } = req.params

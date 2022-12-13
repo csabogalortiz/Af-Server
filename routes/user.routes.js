@@ -5,8 +5,6 @@ const { isAuthenticated } = require('./../midleware/jwt.middleware');
 const { model } = require("mongoose");
 
 
-// Get All Users
-
 router.get("/", (req, res) => {
 
     User
@@ -15,7 +13,6 @@ router.get("/", (req, res) => {
         .catch(err => res.status(500).json(err))
 })
 
-// Get one User
 
 router.get("/:user_id", (req, res, next) => {
 
@@ -32,14 +29,20 @@ router.get("/:user_id", (req, res, next) => {
                 model: 'User'
             },
         })
-        // .populate('favPosts')
+        .populate({
+            path: 'sharedPosts',
+            model: 'Post',
+            populate: {
+                path: 'owner',
+                model: 'User'
+            },
+        })
 
         .then(response => res.json(response))
         .catch(err => next(err))
 })
 
 
-// Followers 
 router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
     const friend_id = req.params.user_id
     const currentuser_id = req.payload._id
@@ -53,15 +56,9 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
 
 })
 
-
-// UnFollow
-
 router.post("/unfollow/:user_id", isAuthenticated, (req, res, next) => {
     const friend_id = req.params.user_id
     const currentuser_id = req.payload._id
-
-    console.log({ friend_id })
-    console.log({ currentuser_id })
 
     const promises = [User.findByIdAndUpdate(currentuser_id, { "$pull": { "followers": friend_id } }, { new: true }), User.findByIdAndUpdate(friend_id, { "$pull": { "followers": currentuser_id } }, { new: true })]
 
@@ -69,17 +66,11 @@ router.post("/unfollow/:user_id", isAuthenticated, (req, res, next) => {
         .all(promises)
         .then(([currentuser, friend]) => res.json([currentuser, friend]))
         .catch(err => next(err))
-
-
 })
 
-
-// FavPost
 router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
     const post_id = req.params.post_id
     user_id = req.payload
-
-    console.log({ user_id })
 
     User
         .findByIdAndUpdate(user_id, { "$addToSet": { "favPosts": post_id } })
@@ -87,13 +78,12 @@ router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
         .catch(err => next(err))
 })
 
-// unlike Post
+
 
 router.post("/unlikePost/:post_id", isAuthenticated, (req, res, next) => {
     const post_id = req.params.post_id
     user_id = req.payload
 
-    console.log({ user_id })
 
     User
         .findByIdAndUpdate(user_id, { "$pull": { "favPosts": post_id } })
@@ -102,12 +92,11 @@ router.post("/unlikePost/:post_id", isAuthenticated, (req, res, next) => {
 })
 
 
-// Share
-router.post("/sharePost/:post_id", isAuthenticated, (req, res, next) => {
+
+router.post("/sharedPosts/:post_id", isAuthenticated, (req, res, next) => {
     const post_id = req.params.post_id
     user_id = req.payload
 
-    console.log({ user_id })
 
     User
         .findByIdAndUpdate(user_id, { "$addToSet": { "sharedPosts": post_id } })
@@ -115,12 +104,10 @@ router.post("/sharePost/:post_id", isAuthenticated, (req, res, next) => {
         .catch(err => next(err))
 })
 
-// UnShare
+
 router.post("/unSharePost/:post_id", isAuthenticated, (req, res, next) => {
     const post_id = req.params.post_id
     user_id = req.payload
-
-    console.log({ user_id })
 
     User
         .findByIdAndUpdate(user_id, { "$pull": { "sharedPosts": post_id } })
@@ -129,18 +116,9 @@ router.post("/unSharePost/:post_id", isAuthenticated, (req, res, next) => {
 })
 
 
-
-
-
-
-
-
-// MyPosts
 router.post("/myPosts/:post_id", isAuthenticated, (req, res, next) => {
     const post_id = req.params.post_id
     user_id = req.payload
-
-    console.log({ user_id })
 
     User
         .findByIdAndUpdate(user_id, { "$addToSet": { "myPosts": post_id } })
@@ -148,8 +126,6 @@ router.post("/myPosts/:post_id", isAuthenticated, (req, res, next) => {
         .catch(err => next(err))
 })
 
-
-// Edit User
 
 router.put("/:user_id/edit", (req, res) => {
     const { id } = req.params
@@ -159,8 +135,6 @@ router.put("/:user_id/edit", (req, res) => {
         .catch(err => console.log(err))
 })
 
-
-// Delete User
 
 router.delete("/:user_id/delete", (req, res) => {
     const { id } = req.params

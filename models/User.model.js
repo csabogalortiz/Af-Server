@@ -58,8 +58,6 @@ const userSchema = new Schema({
     }
   ],
 
-
-
 },
 
   {

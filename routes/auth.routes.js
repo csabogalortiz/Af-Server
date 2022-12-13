@@ -4,11 +4,9 @@ const User = require("../models/User.model")
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
 const { isAuthenticated } = require('./../midleware/jwt.middleware')
-// const { isLoggedOut } = require('./../middleware/route-guard');
 
-// User Sign Up 
 router.post('/signup', (req, res, next) => {
-    const { email, password, username, profileImg,bio } = req.body
+    const { email, password, username, profileImg, bio } = req.body
 
 
     if (password === undefined) {
@@ -27,7 +25,6 @@ router.post('/signup', (req, res, next) => {
         return
     }
 
-    // Search user by email 
 
     User
         .findOne({ email })
@@ -40,7 +37,7 @@ router.post('/signup', (req, res, next) => {
             const salt = bcryptjs.genSaltSync(saltRounds)
             const hashedPassword = bcryptjs.hashSync(password, salt)
 
-            return User.create({ email, password: hashedPassword, username, profileImg,bio })
+            return User.create({ email, password: hashedPassword, username, profileImg, bio })
         })
 
         .then((createdUser) => {
@@ -51,6 +48,7 @@ router.post('/signup', (req, res, next) => {
             res.status(500).json({ message: "Internal Server Error" })
         })
 })
+
 
 router.post('/login', (req, res, next) => {
 
@@ -71,14 +69,11 @@ router.post('/login', (req, res, next) => {
                 return;
             }
 
-            console.log(foundUser.password)
-            console.log(password)
-
             if (bcryptjs.compareSync(password, foundUser.password)) {
 
-                const { _id, email, username,bio,profileImg } = foundUser;
+                const { _id, email, username, bio, profileImg } = foundUser;
 
-                const payload = { _id, email, username,bio,profileImg }
+                const payload = { _id, email, username, bio, profileImg }
 
                 const authToken = jwt.sign(
                     payload,
@@ -102,7 +97,6 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/verify', isAuthenticated, (req, res) => {
-    console.log('Check', req.payload)
     res.status(200).json(req.payload)
 })
 
