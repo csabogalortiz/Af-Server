@@ -19,6 +19,12 @@ const feelingSchema = new Schema({
         ref: 'Post',
     }],
 
+    language: {
+        type: String,
+        required: [true, 'Language required'],
+
+    }
+
 },
     {
         timestamps: true
