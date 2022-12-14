@@ -1,5 +1,6 @@
 module.exports = (app) => {
   app.use((req, res, next) => {
+
     res.status(404).json({ message: "This route does not exist" });
   });
 
@@ -8,7 +9,7 @@ module.exports = (app) => {
     // Error 409 - Conflict
 
     if (err.code && err.code === 11000) {
-      res.status(409).json({ errorMessages: ['This user is already registered'] })
+      res.status(409).json({ errorMessages: ['This record already exists'] })
     }
 
 
@@ -21,7 +22,7 @@ module.exports = (app) => {
     console.error("ERROR", req.method, req.path, err);
 
     if (!res.headersSent) {
-      res.status(500).json({ message: "Internal server error. Check the server console" })
+      res.status(500).json({ errorMessages: ['Server error'] })
     }
   })
 }

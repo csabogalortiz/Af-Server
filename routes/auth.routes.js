@@ -6,47 +6,14 @@ const jwt = require('jsonwebtoken')
 const { isAuthenticated } = require('./../midleware/jwt.middleware')
 
 router.post('/signup', (req, res, next) => {
-    const { email, password, username, profileImg, bio } = req.body
-
-
-    if (password === undefined) {
-        res.status(400).json({ message: 'Invalid Password' })
-        return
-    }
-
-    if (email === undefined) {
-        res.status(400).json({ message: 'Email not found' })
-        return
-    }
-
-
-    if (password.length < 5) {
-        res.status(400).json({ message: 'Password must have at least 4 characters' })
-        return
-    }
-
+    const { email, password, username, profileImg, coverImg, bio } = req.body
 
     User
-        .findOne({ email })
-        .then((foundUser) => {
-
-            if (foundUser) {
-                res.status(400).json({ message: "User already exists" })
-                return
-            }
-            const salt = bcryptjs.genSaltSync(saltRounds)
-            const hashedPassword = bcryptjs.hashSync(password, salt)
-
-            return User.create({ email, password: hashedPassword, username, profileImg, bio })
-        })
-
+        .create({ email, password, username, profileImg, coverImg, bio })
         .then((createdUser) => {
             res.status(201).json({ createdUser })
         })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: "Internal Server Error" })
-        })
+        .catch(err => next(err))
 })
 
 
@@ -55,7 +22,7 @@ router.post('/login', (req, res, next) => {
     const { email, password } = req.body;
 
     if (email === '' || password === '') {
-        res.status(400).json({ message: "Provide email and password." });
+        res.status(400).json({ errormessages: ["Provide email and password."] });
         return;
     }
 
@@ -65,15 +32,15 @@ router.post('/login', (req, res, next) => {
         .then((foundUser) => {
 
             if (!foundUser) {
-                res.status(401).json({ message: "User not found." })
+                res.status(401).json({ errormessages: ["User not found"] });
                 return;
             }
 
             if (bcryptjs.compareSync(password, foundUser.password)) {
 
-                const { _id, email, username, bio, profileImg } = foundUser;
+                const { _id, email, username, bio, profileImg, coverImg, role } = foundUser;
 
-                const payload = { _id, email, username, bio, profileImg }
+                const payload = { _id, email, username, bio, profileImg, coverImg, role }
 
                 const authToken = jwt.sign(
                     payload,
@@ -99,6 +66,8 @@ router.post('/login', (req, res, next) => {
 router.get('/verify', isAuthenticated, (req, res) => {
     res.status(200).json(req.payload)
 })
+
+
 
 
 

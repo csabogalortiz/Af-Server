@@ -9,8 +9,8 @@ router.get("/", (req, res) => {
 
     User
         .find()
-        .then(response => setTimeout(() => res.json(response), 1000))
-        .catch(err => res.status(500).json(err))
+        .then(response => res.json(response))
+        .catch(err => next(err))
 })
 
 
@@ -37,17 +37,20 @@ router.get("/:user_id", (req, res, next) => {
                 model: 'User'
             },
         })
-
         .then(response => res.json(response))
         .catch(err => next(err))
 })
 
 
 router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
-    const friend_id = req.params.user_id
-    const currentuser_id = req.payload._id
 
-    const promises = [User.findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } }, { new: true }), User.findByIdAndUpdate(friend_id, { "$addToSet": { "followers": currentuser_id } }, { new: true })]
+    const { user_id: friend_id } = req.params
+    const { _id: currentuser_id } = req.payload
+
+    const promises = [
+        User.findByIdAndUpdate(currentuser_id, { "$addToSet": { "followers": friend_id } }, { new: true }),
+        User.findByIdAndUpdate(friend_id, { "$addToSet": { "followers": currentuser_id } }, { new: true })
+    ]
 
     Promise
         .all(promises)
@@ -57,10 +60,14 @@ router.post("/addfollower/:user_id", isAuthenticated, (req, res, next) => {
 })
 
 router.post("/unfollow/:user_id", isAuthenticated, (req, res, next) => {
-    const friend_id = req.params.user_id
-    const currentuser_id = req.payload._id
 
-    const promises = [User.findByIdAndUpdate(currentuser_id, { "$pull": { "followers": friend_id } }, { new: true }), User.findByIdAndUpdate(friend_id, { "$pull": { "followers": currentuser_id } }, { new: true })]
+    const { user_id: friend_id } = req.params
+    const { _id: currentuser_id } = req.payload
+
+    const promises = [
+        User.findByIdAndUpdate(currentuser_id, { "$pull": { "followers": friend_id } }, { new: true }),
+        User.findByIdAndUpdate(friend_id, { "$pull": { "followers": currentuser_id } }, { new: true })
+    ]
 
     Promise
         .all(promises)
@@ -69,7 +76,8 @@ router.post("/unfollow/:user_id", isAuthenticated, (req, res, next) => {
 })
 
 router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
-    const post_id = req.params.post_id
+
+    const { post_id } = req.params
     user_id = req.payload
 
     User
@@ -79,9 +87,9 @@ router.post("/favPost/:post_id", isAuthenticated, (req, res, next) => {
 })
 
 
-
 router.post("/unlikePost/:post_id", isAuthenticated, (req, res, next) => {
-    const post_id = req.params.post_id
+
+    const { post_id } = req.params
     user_id = req.payload
 
 
@@ -94,7 +102,8 @@ router.post("/unlikePost/:post_id", isAuthenticated, (req, res, next) => {
 
 
 router.post("/sharedPosts/:post_id", isAuthenticated, (req, res, next) => {
-    const post_id = req.params.post_id
+
+    const { post_id } = req.params
     user_id = req.payload
 
 
@@ -106,7 +115,8 @@ router.post("/sharedPosts/:post_id", isAuthenticated, (req, res, next) => {
 
 
 router.post("/unSharePost/:post_id", isAuthenticated, (req, res, next) => {
-    const post_id = req.params.post_id
+
+    const { post_id } = req.params
     user_id = req.payload
 
     User
@@ -117,7 +127,8 @@ router.post("/unSharePost/:post_id", isAuthenticated, (req, res, next) => {
 
 
 router.post("/myPosts/:post_id", isAuthenticated, (req, res, next) => {
-    const post_id = req.params.post_id
+
+    const { post_id } = req.params
     user_id = req.payload
 
     User
@@ -127,22 +138,19 @@ router.post("/myPosts/:post_id", isAuthenticated, (req, res, next) => {
 })
 
 
-router.put("/:user_id/edit", (req, res) => {
-    const { id } = req.params
+router.put("/edit/:user_id", (req, res) => {
+    const { username, email, bio, profileImg, coverImg } = req.body
+    const { user_id } = req.params
+
     User
-        .findByIdAndUpdate(id, req.body, { new: true })
+        .findByIdAndUpdate(user_id, { username, email, bio, profileImg, coverImg }, { new: true })
         .then(resp => res.json(resp))
-        .catch(err => console.log(err))
+        .catch(err => next(err))
 })
 
 
-router.delete("/:user_id/delete", (req, res) => {
-    const { id } = req.params
-    User
-        .findByIdAndDelete(id)
-        .then(() => res.json(`deleted user with id ${id}`))
-        .catch(err => console.log(err))
-})
+
+
 
 
 module.exports = router;

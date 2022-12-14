@@ -1,29 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const Feeling = require('../models/Feeling.model');
+const { getRandomFeeling } = require('../utils/getRandomFeeling');
 
 
-router.get("/", (req, res) => {
+
+
+router.get("/", (req, res, next) => {
 
     Feeling
         .find()
         .sort({ title: 1 })
         .then(response => res.json(response))
-        .catch(err => res.status(500).json(err))
+        .catch(err => next(err))
 })
 
-router.get("/random", (req, res) => {
-
+router.get("/random", (req, res, next) => {
 
     Feeling
         .find()
         .then(allfeelings => {
-            res.json(allfeelings[Math.floor(Math.random() * allfeelings.length)])
+            const randomFeeling = getRandomFeeling(allfeelings)
+            res.json(randomFeeling)
         })
-        .catch(err => res.status(500).json(err))
+        .catch(err => next(err))
 })
 
 router.get("/:feeling_id", (req, res, next) => {
+
     const { feeling_id } = req.params
 
     Feeling
@@ -33,31 +37,38 @@ router.get("/:feeling_id", (req, res, next) => {
 })
 
 router.post('/create', (req, res, next) => {
-    const { title, content, owner } = req.body
+
+    const { title, content } = req.body
 
     Feeling
         .create({ title, content })
         .then(response => res.json(response))
-        .catch(err => res.status(500).json(err))
+        .catch(err => next(err))
 
 })
 
 
-router.put("/:feeling_id/edit", (req, res) => {
+router.put("/edit/:feeling_id", (req, res, next) => {
+
+    const { title, content } = req.body
+
     const { feeling_id } = req.params
+
     Feeling
-        .findByIdAndUpdate(feeling_id, req.body, { new: true })
+        .findByIdAndUpdate(feeling_id, { title, content }, { new: true })
         .then(resp => res.json(resp))
-        .catch(err => console.log(err))
+        .catch(err => next(err))
 })
 
 
-router.delete("/:feeling_id/delete", (req, res) => {
+router.delete("/:feeling_id/delete", (req, res, next) => {
+
     const { feeling_id } = req.params
+
     User
         .findByIdAndDelete(feeling_id)
         .then(() => res.json(`deleted user with id ${id}`))
-        .catch(err => console.log(err))
+        .catch(err => next(err))
 })
 
 

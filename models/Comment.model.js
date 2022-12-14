@@ -8,6 +8,8 @@ const commentSchema = new Schema({
 
     description: {
         type: String,
+        required: [true, 'Description required'],
+        minlengh: [5, 'Description must be at least 5 characters long']
     },
 },
     {

@@ -16,4 +16,8 @@ module.exports = app => {
 
     const uploadRoutes = require("./upload.routes");
     app.use("/api/upload", uploadRoutes)
+
+    // const quizRoutes = require("./quiz.routes");
+    // app.use("/api/quiz", quizRoutes)
+
 }

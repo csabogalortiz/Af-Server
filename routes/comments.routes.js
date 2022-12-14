@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const { isAuthenticated } = require("../midleware/jwt.middleware")
 const Post = require('../models/Post.model')
 const Comment = require('../models/Comment.model')
-const { isAuthenticated } = require("../midleware/jwt.middleware")
 
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   Comment
     .find()
     .populate('owner')
-    .then(response => setTimeout(() => res.json(response), 1000))
-    .catch(err => res.status(500).json(err))
+    .then(() => res.json(response))
+    .catch(err => next(err))
 });
 
 router.post('/create/:post_id', isAuthenticated, (req, res, next) => {
@@ -24,19 +24,19 @@ router.post('/create/:post_id', isAuthenticated, (req, res, next) => {
       Post
         .findByIdAndUpdate(post_id, { "$push": { "comments": response._id } })
         .then(() => res.json(response))
-        .catch(err => console.log(err))
+        .catch(err => next(err))
     })
-    .catch(err => res.status(500).json(err))
+    .catch(err => next(err))
 })
 
 
-router.delete(`/delete/:comment_id`, (req, res) => {
+router.delete(`/delete/:comment_id`, (req, res, next) => {
   const { id: comment_id } = req.params
 
   Comment
     .findByIdAndDelete(comment_id)
     .then(() => res.json(response))
-    .catch(err => res.status(500).json(err))
+    .catch(err => next(err))
 
 })
 

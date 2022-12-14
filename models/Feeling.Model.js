@@ -5,6 +5,9 @@ const feelingSchema = new Schema({
 
     title: {
         type: String,
+        required: [true, 'Title required'],
+        minlengh: [1, 'Title must be at least 1 character long'],
+        unique: true
     },
 
     content: {

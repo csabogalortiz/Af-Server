@@ -1,18 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post.model')
 const { isAuthenticated } = require("../midleware/jwt.middleware")
+const Post = require('../models/Post.model')
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     Post
-
         .find()
         .sort({ createdAt: -1 })
         .populate('owner')
         .then(response => {
             res.json(response)
         })
-        .catch(err => res.status(500).json(err))
+        .catch(err => next(err))
 });
 
 router.get("/details/:post_id", (req, res, next) => {
@@ -21,7 +20,6 @@ router.get("/details/:post_id", (req, res, next) => {
 
     Post
         .findById(post_id)
-
         .populate({
             path: 'comments',
             model: "Comment",
@@ -39,42 +37,43 @@ router.post('/create', isAuthenticated, (req, res, next) => {
     Post
         .create({ ...req.body, owner: req.payload })
         .then(response => res.json(response))
-        .catch(err => res.status(500).json(err))
+        .catch(err => { next(err) })
 })
 
 
-router.get('/createdPosts/:user_id', isAuthenticated, (req, res) => {
+router.get('/createdPosts/:owner', isAuthenticated, (req, res, next) => {
 
-    const user_id = req.params.user_id
+    const { owner } = req.params
 
     Post
-        .find({ owner: user_id })
+        .find({ owner })
         .populate('owner')
         .then(response => res.json(response))
-        .catch(error => { next(error) })
+        .catch(err => { next(err) })
 })
 
-router.get('/ofFeeling/:feeling_id', isAuthenticated, (req, res, next) => {
 
-    const feeling_id = req.params.feeling_id
+router.get('/ofFeeling/:feeling', isAuthenticated, (req, res, next) => {
+
+    const { feeling } = req.params
 
     Post
-        .find({ feeling: feeling_id })
+        .find({ feeling })
         .populate('feeling')
         .then(response => res.json(response))
-        .catch(error => { next(error) })
+        .catch(err => { next(err) })
 
 })
 
 
-router.delete('/delete/:post_id', isAuthenticated, (req, res) => {
+router.delete('/delete/:post_id', isAuthenticated, (req, res, next) => {
 
     const { post_id } = req.params
 
     Post
         .findByIdAndDelete(post_id)
         .then((response) => res.json(response))
-        .catch(error => { next(error) })
+        .catch(err => { next(err) })
 
 })
 

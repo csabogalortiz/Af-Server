@@ -55,6 +55,7 @@ const postSchema = new Schema({
     mediaType: {
         type: String,
         enum: ['IMG', "CANVAS", "SONG", "TEXT"],
+        required: [true, 'No media type selected'],
     }
 
 },
