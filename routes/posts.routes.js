@@ -8,6 +8,7 @@ router.get('/', (req, res, next) => {
         .find()
         .sort({ createdAt: -1 })
         .populate('owner')
+        .populate('feeling')
         .then(response => {
             res.json(response)
         })
@@ -28,6 +29,8 @@ router.get("/details/:post_id", (req, res, next) => {
                 model: "User"
             },
         })
+        .populate('feeling')
+        .populate('owner')
         .then(response => res.json(response))
         .catch(err => next(err))
 })
@@ -48,6 +51,7 @@ router.get('/createdPosts/:owner', isAuthenticated, (req, res, next) => {
     Post
         .find({ owner })
         .populate('owner')
+        .populate('feeling')
         .then(response => res.json(response))
         .catch(err => { next(err) })
 })
@@ -60,6 +64,7 @@ router.get('/ofFeeling/:feeling', isAuthenticated, (req, res, next) => {
     Post
         .find({ feeling })
         .populate('feeling')
+        .populate('owner')
         .then(response => res.json(response))
         .catch(err => { next(err) })
 
