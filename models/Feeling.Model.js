@@ -23,7 +23,12 @@ const feelingSchema = new Schema({
         type: String,
         required: [true, 'Language required'],
 
-    }
+    },
+
+    img: {
+        type: String,
+    },
+
 
 },
     {

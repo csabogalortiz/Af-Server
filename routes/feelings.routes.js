@@ -38,10 +38,10 @@ router.get("/:feeling_id", (req, res, next) => {
 
 router.post('/create', (req, res, next) => {
 
-    const { title, content, language } = req.body
+    const { title, content, language, img } = req.body
     console.log(req.body)
     Feeling
-        .create({ title, content, language })
+        .create({ title, content, language, img })
         .then(response =>
 
             res.json(response))
@@ -52,12 +52,12 @@ router.post('/create', (req, res, next) => {
 
 router.put("/edit/:feeling_id", (req, res, next) => {
 
-    const { title, content, language } = req.body
+    const { title, content, language, img } = req.body
 
     const { feeling_id } = req.params
 
     Feeling
-        .findByIdAndUpdate(feeling_id, { title, content, language }, { new: true })
+        .findByIdAndUpdate(feeling_id, { title, content, language, img }, { new: true })
         .then(resp => res.json(resp))
         .catch(err => next(err))
 })
