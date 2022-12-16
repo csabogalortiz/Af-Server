@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Feeling = require('../models/Feeling.model');
+const Feeling = require('./../models/Feeling.Model');
 const { getRandomFeeling } = require('../utils/getRandomFeeling');
 
 
